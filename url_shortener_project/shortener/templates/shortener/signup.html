@@ -1,0 +1,26 @@
+{% extends 'shortener/base.html' %}
+
+{% block content %}
+<div class="card">
+    <h2>📝 Create Account</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <div class="form-group">
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" name="confirm_password" id="confirm_password" required>
+        </div>
+        <button type="submit">Create Account</button>
+    </form>
+    <p style="margin-top: 15px;">
+        Already have an account? <a href="/admin/login/">Login here</a>
+    </p>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'shortener/base.html' %}
+
+{% block content %}
+<div class="card">
+    <h2>📊 Your Links</h2>
+    
+    {% if links %}
+    <table>
+        <thead>
+            <tr>
+                <th>Short URL</th>
+                <th>Original URL</th>
+                <th>Clicks</th>
+                <th>Created</th>
+                <th>Expires</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for link in links %}
+            <tr>
+                <td>
+                    <a href="{{ link.full_short_url }}" target="_blank">{{ link.short_code }}</a>
+                    <br>
+                    <small><a href="#" onclick="showQR('{{ link.full_short_url }}')">📱 QR Code</a></small>
+                </td>
+                <td>{{ link.original_url|truncatechars:40 }}</td>
+                <td>
+                    <strong>{{ link.total_clicks }}</strong>
+                    {% if link.clicks.count > 0 %}
+                    <br>
+                    <small>Last: {{ link.clicks.last.clicked_at|timesince }} ago</small>
+                    {% endif %}
+                </td>
+                <td>{{ link.created_at|date:"Y-m-d" }}</td>
+                <td>
+                    {% if link.expires_at %}
+                        {{ link.expires_at|date:"Y-m-d" }}
+                        {% if link.is_expired %}
+                            <span style="color: red;">(Expired)</span>
+                        {% endif %}
+                    {% else %}
+                        Never
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="POST" action="{% url 'delete' link.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn" onclick="return confirm('Delete this link?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>You haven't created any links yet. <a href="/">Create your first link →</a></p>
+    {% endif %}
+</div>
+
+<script>
+function showQR(url) {
+    alert('QR Code for: ' + url + '\n\n(Full QR feature coming soon!)');
+}
+</script>
+{% endblock %}

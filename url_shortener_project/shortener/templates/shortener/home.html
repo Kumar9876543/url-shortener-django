@@ -1,0 +1,45 @@
+{% extends 'shortener/base.html' %}
+
+{% block content %}
+<div class="card">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="original_url">Enter your long URL</label>
+            <input type="url" name="original_url" id="original_url" 
+                   placeholder="https://example.com/very/long/url" required>
+        </div>
+        <button type="submit">✨ Shorten URL</button>
+    </form>
+    
+    {% if short_url %}
+<div class="result">
+    <p><strong>✅ Your shortened URL:</strong></p>
+    <p class="short-url">{{ short_url }}</p>
+    <button class="copy-btn" onclick="copyToClipboard('{{ short_url }}')">📋 Copy URL</button>
+    
+    {% if qr_code %}
+    <div style="text-align: center; margin-top: 20px;">
+        <p><strong>📱 Scan QR Code:</strong></p>
+        <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" style="width: 150px; height: 150px;">
+        <p style="font-size: 12px; color: #666; margin-top: 10px;">Scan with your phone camera</p>
+    </div>
+    {% endif %}
+    
+    <p style="margin-top: 10px; font-size: 14px; color: #666;">
+        Original: {{ original_url|truncatechars:50 }}
+    </p>
+</div>
+{% endif %}
+</div>
+
+<div class="card">
+    <h3>📊 Features</h3>
+    <ul style="margin-top: 10px; margin-left: 20px;">
+        <li>✅ Free and no registration required</li>
+        <li>✅ Track total clicks on your links</li>
+        <li>✅ Create account to manage all your links</li>
+        <li>✅ Simple and fast redirects</li>
+    </ul>
+</div>
+{% endblock %}
